@@ -33,20 +33,10 @@ Db.sync({ force: true }).then(() => {
       order: Faker.random.number(),
     }).then((carModel) => {
       _.times(5, () =>
-        carModel
-          .createCar({
-            name: Faker.company.companyName(),
-            description: Faker.lorem.paragraph(),
-          })
-          .then((car) => {
-            _.times(5, () =>
-              car.createBooking({
-                uuid: Faker.random.uuid(),
-                startDateTime: Faker.date.soon(),
-                endDateTime: Faker.date.future(),
-              })
-            );
-          })
+        carModel.createCar({
+          name: Faker.company.companyName(),
+          description: Faker.lorem.paragraph(),
+        })
       );
     })
   );
