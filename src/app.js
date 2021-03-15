@@ -1,10 +1,9 @@
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import rootSchema from './schema/rootSchema';
+import { Strategy } from 'passport-google-oauth2';
 import passport from 'passport';
 import * as settings from './settings';
-
-import { Strategy } from 'passport-google-oauth2';
+import rootSchema from './schema/rootSchema';
 
 // Config
 const APP_PORT = 3000;
@@ -16,7 +15,7 @@ passport.use(
     {
       clientID: settings.googleClientId,
       clientSecret: settings.googleClientSecret,
-      callbackURL: '/graphql',
+      callbackURL: '/',
       passReqToCallback: true,
     },
     function (request, accessToken, refreshToken, profile, done) {
@@ -27,8 +26,14 @@ passport.use(
   )
 );
 
+const loggingMiddleware = (req, res, next) => {
+  console.log('ip:', req);
+  next();
+};
+
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(loggingMiddleware);
 
 app.get(
   '/auth/google',
@@ -52,7 +57,3 @@ app.use(
     graphiql: true,
   })
 );
-
-app.listen(APP_PORT, () => {
-  console.log(`App listening on port ${APP_PORT}`);
-});

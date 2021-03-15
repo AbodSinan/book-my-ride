@@ -1,5 +1,4 @@
 import Sequalize from 'sequelize';
-import Faker from 'faker';
 import Conn from './db';
 
 export const User = Conn.define('user', {
@@ -8,7 +7,7 @@ export const User = Conn.define('user', {
     allowNull: false,
     valiate: {
       isEmail: true,
-    }
+    },
   },
   firstName: {
     type: Sequalize.STRING,
@@ -29,6 +28,5 @@ export const User = Conn.define('user', {
   isVerified: {
     type: Sequalize.BOOLEAN,
     defaultValue: false,
-  }
+  },
 });
-
