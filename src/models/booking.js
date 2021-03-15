@@ -61,12 +61,12 @@ export const Booking = Conn.define(
                 [Op.and]: [
                   {
                     startDateTime: {
-                      [Op.lt]: this.startDateTime,
+                      [Op.lte]: this.startDateTime,
                     },
                   },
                   {
                     endDateTime: {
-                      [Op.gt]: this.endDateTime,
+                      [Op.gte]: this.endDateTime,
                     },
                   },
                 ],
@@ -74,7 +74,7 @@ export const Booking = Conn.define(
             ],
           },
         });
-        if (bookings) {
+        if (bookings.length > 0) {
           throw new Error('Booking not availble at that time');
         }
       },

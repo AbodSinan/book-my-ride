@@ -2,15 +2,13 @@ import {
   GraphQLObjectType,
   GraphQLInt,
   GraphQLString,
+  GraphQLFloat,
 } from 'graphql';
 
-import {
-  GraphQLDateTime,
-} from 'graphql-iso-date';
+import { GraphQLDateTime } from 'graphql-iso-date';
+import * as priceUtils from '../utils/priceUtils';
 
-import {
-  CarSchema,
-} from './carSchema';
+import { CarSchema } from './carSchema';
 
 export const BookingSchema = new GraphQLObjectType({
   name: 'booking',
@@ -21,26 +19,37 @@ export const BookingSchema = new GraphQLObjectType({
         type: GraphQLString,
         resolve(booking) {
           return booking.uuid;
-        }
+        },
       },
       startDateTime: {
         type: GraphQLDateTime,
         resolve(booking) {
           return booking.startDateTime;
-        }
+        },
       },
       endDateTime: {
         type: GraphQLDateTime,
         resolve(booking) {
           return booking.endDateTime;
-        }
+        },
+      },
+      price: {
+        type: GraphQLFloat,
+        async resolve(booking) {
+          const car = await booking.getCar();
+          return priceUtils.calculatePrice({
+            hourlyPrice: car.hourlyPrice,
+            startDateTime: booking.startDateTime,
+            endDateTime: booking.endDateTime,
+          });
+        },
       },
       car: {
         type: CarSchema,
         resolve(booking) {
           return booking.getCar();
-        }
+        },
       },
     };
-  }
+  },
 });

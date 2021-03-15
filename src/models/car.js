@@ -12,6 +12,11 @@ export const Car = Db.define('car', {
     type: Sequelize.TEXT,
     allowNull: false,
   },
+  hourlyPrice: {
+    type: Sequelize.FLOAT,
+    allowNull: false,
+    defaultValue: '0.00',
+  },
 });
 
 export const CarModel = Db.define('carModel', {
@@ -36,6 +41,7 @@ Db.sync({ force: true }).then(() => {
         carModel.createCar({
           name: Faker.company.companyName(),
           description: Faker.lorem.paragraph(),
+          hourlyPrice: Faker.random.float({ min: 5, max: 10 }),
         })
       );
     })

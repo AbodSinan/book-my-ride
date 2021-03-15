@@ -15,7 +15,7 @@ passport.use(
     {
       clientID: settings.googleClientId,
       clientSecret: settings.googleClientSecret,
-      callbackURL: '/',
+      callbackURL: '/auth/google/callback',
       passReqToCallback: true,
     },
     function (request, accessToken, refreshToken, profile, done) {
@@ -26,14 +26,16 @@ passport.use(
   )
 );
 
-const loggingMiddleware = (req, res, next) => {
-  console.log('ip:', req);
-  next();
-};
+passport.serializeUser(function (user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function (obj, cb) {
+  cb(null, obj);
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(loggingMiddleware);
 
 app.get(
   '/auth/google',
@@ -57,3 +59,7 @@ app.use(
     graphiql: true,
   })
 );
+
+app.listen(APP_PORT, () => {
+  console.log(`App listening on port ${APP_PORT}`);
+});
