@@ -11,7 +11,7 @@ var _debug = _interopRequireDefault(require("debug"));
 
 var _http = _interopRequireDefault(require("http"));
 
-var _app = _interopRequireDefault(require("../app"));
+var _app = require("../app");
 
 /**
  * Normalize a port into a number, string, or false.
@@ -38,13 +38,13 @@ var normalizePort = function normalizePort(val) {
 
 var port = normalizePort(process.env.PORT || '3000');
 
-_app["default"].set('port', port);
+_app.app.set('port', port);
 /**
  * Create HTTP server.
  */
 
 
-var server = _http["default"].createServer(_app["default"]);
+var server = _http["default"].createServer(_app.app);
 /**
  * Event listener for HTTP server "error" event.
  */
@@ -53,23 +53,6 @@ var server = _http["default"].createServer(_app["default"]);
 var onError = function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
-  }
-
-  var bind = typeof port === 'string' ? "Pipe ".concat(port) : "Port ".concat(port); // handle specific listen errors with friendly messages
-
-  switch (error.code) {
-    case 'EACCES':
-      alert("".concat(bind, " requires elevated privileges"));
-      process.exit(1);
-      break;
-
-    case 'EADDRINUSE':
-      alert("".concat(bind, " is already in use"));
-      process.exit(1);
-      break;
-
-    default:
-      throw error;
   }
 };
 /**

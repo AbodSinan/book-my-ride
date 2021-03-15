@@ -5,7 +5,10 @@ import passport from 'passport';
 import rootSchema from './schema/rootSchema';
 import * as settings from './settings';
 
-const app = express();
+// Config
+const APP_PORT = 3000;
+
+export const app = express();
 app.use(
   '/',
   graphqlHTTP({

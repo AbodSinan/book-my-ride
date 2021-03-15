@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "prestart": "babel ./src --out-dir build",
-    "start": "node --exec babel-node ./src/app",
+    "start": "node ./build/bin/www",
     "startdev": "nodemon --exec babel-node ./src/bin/www",
     "startDevApp": "nodemon --exec babel-node ./src/app",
     "lint": "./node_modules/.bin/eslint ./src",
