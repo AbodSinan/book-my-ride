@@ -37,6 +37,13 @@ passport.deserializeUser(function (obj, cb) {
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Configure view engine to render EJS templates.
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
+app.get('/login', function (req, res) {
+  res.render('login');
+});
 app.get(
   '/auth/google',
   passport.authenticate('google', { scope: ['profile'] })
@@ -48,6 +55,14 @@ app.get(
   function (req, res) {
     // Successful authentication, redirect home.
     res.redirect('/graphql');
+  }
+);
+
+app.get(
+  '/profile',
+  require('connect-ensure-login').ensureLoggedIn(),
+  function (req, res) {
+    res.render('profile', { user: req.user });
   }
 );
 
