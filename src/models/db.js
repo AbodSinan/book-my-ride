@@ -2,6 +2,7 @@ import Sequelize from 'sequelize';
 
 import * as settings from '../settings';
 
+// Initiate the database with ssl connections
 export const Conn = new Sequelize(settings.connectionString, {
   dialect: 'postgres',
   protocol: 'postgres',

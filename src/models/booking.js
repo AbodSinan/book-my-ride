@@ -4,6 +4,7 @@ import Conn from './db';
 import { User } from './user';
 import { Car } from './car';
 
+// A model to store information related to bookings
 export const Booking = Conn.define(
   'Booking',
   {
@@ -20,6 +21,7 @@ export const Booking = Conn.define(
       type: Sequelize.DATE,
       allowNull: false,
       validate: {
+        // Make sure starting date is earlier than ending date
         isGreaterThanOtherField(date) {
           if (date <= this.startDateTime) {
             throw new Error('endDateTime must be greater than startDateTime.');
@@ -31,6 +33,8 @@ export const Booking = Conn.define(
   {
     Sequelize,
     validate: {
+      // Check on whether the booking time is available
+      //NOTE: This is the central design concept
       async isBookingTimeAvailable() {
         // Retrieve the car that's meant to be booked
         const car = await Conn.models.Car.findByPk(this.CarId);
@@ -74,9 +78,11 @@ export const Booking = Conn.define(
             ],
           },
         });
+        // Exclude the bookings of the current instance in case of editing
         const bookingsExcludingThis = bookings.filter(
           (booking) => booking.uuid !== this.uuid
         );
+        // If bookings are found, raise an error
         if (bookingsExcludingThis.length > 0) {
           throw new Error('Booking not availble at that time');
         }

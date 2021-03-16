@@ -2,9 +2,10 @@ import { GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql';
 
 import { BookingSchema } from './bookingSchema';
 
+// The schema object of users, to view user information
 export const UserSchema = new GraphQLObjectType({
   name: 'User',
-  description: 'A user instance',
+  description: 'A user instance with auth info',
   fields() {
     return {
       googleId: {
@@ -25,6 +26,7 @@ export const UserSchema = new GraphQLObjectType({
           return user.lastName;
         },
       },
+      // Get associated fields
       bookings: {
         type: new GraphQLList(BookingSchema),
         resolve(user) {

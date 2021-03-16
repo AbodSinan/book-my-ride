@@ -8,6 +8,7 @@ import { GraphQLDateTime } from 'graphql-iso-date';
 import { GraphQLList } from 'graphql/type/definition';
 import { BookingSchema } from './bookingSchema';
 
+// The schema object of Cars, to view a car's information
 export const CarSchema = new GraphQLObjectType({
   name: 'Car',
   description: 'A single car in the inventory',
@@ -43,12 +44,14 @@ export const CarSchema = new GraphQLObjectType({
           return car.createdAt;
         },
       },
+      // Get associated fields
       model: {
         type: CarModelSchema,
         resolve(car) {
           return car.getCarModel();
         },
       },
+      // Get associated fields
       bookings: {
         type: new GraphQLList(BookingSchema),
         resolve(car) {
@@ -76,6 +79,7 @@ export const CarModelSchema = new GraphQLObjectType({
           return carModel.name;
         },
       },
+      // Get associated fields
       cars: {
         type: new GraphQLList(CarSchema),
         resolve(carModel) {

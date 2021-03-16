@@ -1,4 +1,10 @@
-import { GraphQLList, GraphQLInt, GraphQLString, GraphQLFloat } from 'graphql';
+import {
+  GraphQLList,
+  GraphQLInt,
+  GraphQLString,
+  GraphQLFloat,
+  GraphQLNonNull,
+} from 'graphql';
 import { GraphQLDateTime } from 'graphql-iso-date';
 import { Op } from 'sequelize';
 
@@ -9,6 +15,7 @@ import { CarSchema, CarModelSchema } from '../schemas/carSchema';
 export const carQueries = {
   cars: {
     type: new GraphQLList(CarSchema),
+    description: 'Get list of all cars',
     args: {
       id: {
         type: GraphQLInt,
@@ -26,15 +33,17 @@ export const carQueries = {
   },
   availableCars: {
     type: new GraphQLList(CarSchema),
+    description:
+      'Get list of cars available at that time, based on given carModelId',
     args: {
       carModelId: {
         type: GraphQLInt,
       },
       startDateTime: {
-        type: GraphQLDateTime,
+        type: new GraphQLNonNull(GraphQLDateTime),
       },
       endDateTime: {
-        type: GraphQLDateTime,
+        type: new GraphQLNonNull(GraphQLDateTime),
       },
     },
     async resolve(root, args) {
