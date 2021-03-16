@@ -5,7 +5,7 @@ import { User } from './user';
 import { Car } from './car';
 
 export const Booking = Conn.define(
-  'booking',
+  'Booking',
   {
     uuid: {
       type: Sequelize.UUID,
@@ -33,7 +33,7 @@ export const Booking = Conn.define(
     validate: {
       async isBookingTimeAvailable() {
         // Retrieve the car that's meant to be booked
-        const car = await Conn.models.car.findByPk(this.carId);
+        const car = await Conn.models.Car.findByPk(this.CarId);
         // Find bookings that have ends or starts within the time period
         const bookings = await car.getBookings({
           where: {
@@ -74,7 +74,10 @@ export const Booking = Conn.define(
             ],
           },
         });
-        if (bookings.length > 0) {
+        const bookingsExcludingThis = bookings.filter(
+          (booking) => booking.uuid !== this.uuid
+        );
+        if (bookingsExcludingThis.length > 0) {
           throw new Error('Booking not availble at that time');
         }
       },

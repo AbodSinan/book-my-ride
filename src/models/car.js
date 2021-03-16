@@ -1,9 +1,8 @@
 import Sequelize from 'sequelize';
 import _ from 'lodash';
-import Faker from 'faker';
 import Db from './db';
 
-export const Car = Db.define('car', {
+export const Car = Db.define('Car', {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -19,7 +18,7 @@ export const Car = Db.define('car', {
   },
 });
 
-export const CarModel = Db.define('carModel', {
+export const CarModel = Db.define('CarModel', {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -29,21 +28,3 @@ export const CarModel = Db.define('carModel', {
 // Relationships
 CarModel.hasMany(Car);
 Car.belongsTo(CarModel);
-
-// Create 10 categories containing a product
-Db.sync({ force: true }).then(() => {
-  _.times(2, () =>
-    CarModel.create({
-      name: Faker.name.firstName(),
-      order: Faker.random.number(),
-    }).then((carModel) => {
-      _.times(5, () =>
-        carModel.createCar({
-          name: Faker.company.companyName(),
-          description: Faker.lorem.paragraph(),
-          hourlyPrice: Faker.random.float({ min: 5, max: 10 }),
-        })
-      );
-    })
-  );
-});

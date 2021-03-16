@@ -10,5 +10,5 @@ export const calculateHours = ({ startDateTime, endDateTime }) => {
 
   const milisecDiff = Math.abs(date2.getTime() - date1.getTime());
 
-  return milisecDiff / 1000 / 3600;
+  return Math.ceil(milisecDiff / 1000 / 3600);
 };

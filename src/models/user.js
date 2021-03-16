@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import Conn from './db';
 
-export const User = Conn.define('user', {
+export const User = Conn.define('User', {
   googleId: {
     type: Sequelize.STRING,
     primaryKey: true,
