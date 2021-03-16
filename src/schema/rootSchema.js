@@ -1,84 +1,29 @@
-import {
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLList,
-  GraphQLInt,
-} from 'graphql';
-import { Op } from 'sequelize';
-import { GraphQLDateTime } from 'graphql-iso-date';
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 
-import { CarSchema, CarModelSchema } from './carSchema';
-import { Car, CarModel } from '../models/car';
+import { carQueries } from './queries/carQueries';
+import { bookingQueries } from './queries/bookingQueries';
+import { userQueries } from './queries/userQueries';
 import { carModelMutations, carMutations } from './mutations/carMutations';
-import { Booking } from '../models/booking';
-import { BookingSchema } from './bookingSchema';
 import { bookingMutations } from './mutations/bookingMutations';
 
 const Query = new GraphQLObjectType({
   name: 'Query',
   description: 'Root Query Object',
   fields: () => ({
-    cars: {
-      type: new GraphQLList(CarSchema),
-      resolve(root, args) {
-        return Car.findAll({ where: args });
-      }
-    },
-    availableCars: {
-      type: new GraphQLList(CarSchema),
-      args: {
-        carModelId: {
-          type: GraphQLInt,
-        },
-        startDateTime: {
-          type: GraphQLDateTime,
-        },
-        endDateTime: {
-          type: GraphQLDateTime,
-        },
-      },
-      async resolve(root, args) {
-        const cars = await Car.findAll({
-          where: {
-            [Op.or]: {
-              '$bookings.startDateTime$': { [Op.gt]: args.endDateTime },
-              '$bookings.endDateTime$': { [Op.lt]: args.startDateTime},
-            }
-          },
-          include: {
-            model: Booking,
-            as: 'bookings',
-          }
-        });
-        return cars
-
-      }
-    },
-    bookings: {
-      type: new GraphQLList(BookingSchema),
-      resolve(root, args) {
-        return Booking.findAll({ where: args });
-      }
-    },
-    carModels: {
-      type: new GraphQLList(CarModelSchema),
-      resolve(root, args) {
-        return CarModel.findAll({ where: args });
-      }
-    },
-  })
+    ...userQueries,
+    ...carQueries,
+    ...bookingQueries,
+  }),
 });
 
 const Mutation = new GraphQLObjectType({
   name: 'Mutations',
   description: 'Functions for CRUDing models',
-  fields() {
-    return {
-      ...carMutations,
-      ...carModelMutations,
-      ...bookingMutations,
-    };
-  }
+  fields: () => ({
+    ...carMutations,
+    ...carModelMutations,
+    ...bookingMutations,
+  }),
 });
 
 const Schema = new GraphQLSchema({

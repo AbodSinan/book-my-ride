@@ -1,14 +1,10 @@
-import {
-  GraphQLObjectType,
-  GraphQLInt,
-  GraphQLString,
-  GraphQLFloat,
-} from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql';
 
 import { GraphQLDateTime } from 'graphql-iso-date';
-import * as priceUtils from '../utils/priceUtils';
+import * as priceUtils from '../../utils/priceUtils';
 
 import { CarSchema } from './carSchema';
+import { UserSchema } from './userSchema';
 
 export const BookingSchema = new GraphQLObjectType({
   name: 'booking',
@@ -48,6 +44,12 @@ export const BookingSchema = new GraphQLObjectType({
         type: CarSchema,
         resolve(booking) {
           return booking.getCar();
+        },
+      },
+      user: {
+        type: UserSchema,
+        resolve(booking) {
+          return booking.getUser();
         },
       },
     };

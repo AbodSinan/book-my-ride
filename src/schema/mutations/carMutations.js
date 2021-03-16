@@ -6,7 +6,7 @@ import {
 } from 'graphql';
 
 import Db from '../../models/db';
-import { CarSchema, CarModelSchema } from '../carSchema';
+import { CarSchema, CarModelSchema } from '../schemas/carSchema';
 
 export const carMutations = {
   addCar: {
@@ -26,7 +26,7 @@ export const carMutations = {
       },
     },
     resolve(source, args) {
-      return Db.models.carModel.findByPk(args.carModelId).then((carModel) =>
+      return Db.models.CarModel.findByPk(args.carModelId).then((carModel) =>
         carModel.createCar({
           name: args.name,
           description: args.description,
@@ -55,7 +55,7 @@ export const carMutations = {
       },
     },
     async resolve(source, args) {
-      const car = await Db.models.car.findByPk(args.id);
+      const car = await Db.models.Car.findByPk(args.id);
 
       car.name = args.name || car.name;
       car.description = args.description || car.description;
@@ -74,7 +74,7 @@ export const carMutations = {
       },
     },
     resolve(source, args) {
-      return Db.models.car.findByPk(id).then((car) => car.destroy());
+      return Db.models.Car.findByPk(args.id).then((car) => car.destroy());
     },
   },
 };
@@ -88,7 +88,7 @@ export const carModelMutations = {
       },
     },
     resolve(source, args) {
-      return Db.models.carModel.create({
+      return Db.models.CarModel.create({
         name: args.name,
       });
     },

@@ -2,14 +2,14 @@ import { GraphQLInt, GraphQLString, GraphQLNonNull } from 'graphql';
 import { GraphQLDateTime } from 'graphql-iso-date';
 
 import Db from '../../models/db';
-import { BookingSchema } from '../bookingSchema';
+import { BookingSchema } from '../schemas/bookingSchema';
 
 export const bookingMutations = {
   addBooking: {
     type: BookingSchema,
     args: {
-      carId: {
-        type: GraphQLInt,
+      CarId: {
+        type: new GraphQLNonNull(GraphQLInt),
       },
       startDateTime: {
         type: GraphQLDateTime,
@@ -18,12 +18,16 @@ export const bookingMutations = {
         type: GraphQLDateTime,
       },
     },
-    resolve(source, args) {
-      return Db.models.car.findByPk(args.carId).then((car) =>
-        car.createBooking({
-          startDateTime: args.startDateTime,
-          endDateTime: args.endDateTime,
-        })
+    resolve(root, args, request) {
+      return Db.models.Car.findByPk(args.CarId).then((car) =>
+        car
+          .createBooking({
+            startDateTime: args.startDateTime,
+            endDateTime: args.endDateTime,
+          })
+          .then((booking) => {
+            booking.setUser(request.user);
+          })
       );
     },
   },
@@ -33,7 +37,7 @@ export const bookingMutations = {
       uuid: {
         type: new GraphQLNonNull(GraphQLString),
       },
-      carId: {
+      CarId: {
         type: GraphQLInt,
       },
       startDateTime: {
@@ -44,8 +48,8 @@ export const bookingMutations = {
       },
     },
     async resolve(source, args) {
-      const booking = await Db.models.booking.findByPk(args.uuid);
-      booking.carId = args.carId || booking.carId;
+      const booking = await Db.models.Booking.findByPk(args.uuid);
+      booking.CarId = args.CarId || booking.CarId;
       booking.startDateTime = args.startDateTime || booking.startDateTime;
       booking.endDateTime = args.endDateTime || booking.endDateTime;
       booking.save();
@@ -61,9 +65,9 @@ export const bookingMutations = {
       },
     },
     resolve(source, args) {
-      return Db.models.booking
-        .findByPk(uuid)
-        .then((booking) => booking.destroy());
+      return Db.models.Booking.findByPk(uuid).then((booking) =>
+        booking.destroy()
+      );
     },
   },
 };
