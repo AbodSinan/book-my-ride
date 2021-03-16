@@ -10,7 +10,9 @@
     "lint": "./node_modules/.bin/eslint ./src",
     "pretty": "prettier --write '**/*.{js,json}' '!node_modules/**'",
     "postpretty": "yarn lint --fix",
-    "test": "nyc --reporter=html --reporter=text --reporter=lcov mocha -r @babel/register",
+    "db:reset": "cross-env NODE_ENV=test npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+    "pretest": "cross-env NODE_ENV=test yarn run db:reset",
+    "test": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text --reporter=lcov mocha --timeout 10000 -r @babel/register",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "runProduct": "babel-node ./src/models/product",
     "runQuery": "babel-node ./src/utils/runQuery"
@@ -26,6 +28,8 @@
     "body-parser": "^1.19.0",
     "connect-ensure-login": "^0.1.1",
     "cookie-parser": "^1.4.5",
+    "cookie-session": "^1.4.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
@@ -40,13 +44,22 @@
     "passport-google-oauth2": "^0.2.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.5.1",
-    "sequelize": "^6.5.0"
+    "sequelize": "^6.5.0",
+    "sequelize-cli": "^6.2.0",
+    "sinon": "^9.2.4"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
+    "coveralls": "^3.1.0",
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
+    "mocha": "^8.3.2",
+    "node-model-factory": "^2.0.3",
     "nodemon": "^2.0.7",
-    "prettier": "^2.2.1"
+    "nyc": "^15.1.0",
+    "prettier": "^2.2.1",
+    "sinon-chai": "^3.5.0",
+    "supertest": "^6.1.3"
   }
 }
