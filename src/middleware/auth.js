@@ -23,7 +23,6 @@ passport.use(
     },
     function (request, accessToken, refreshToken, profile, done) {
       // Create new user based on profile, or find if it already exists
-      console.log('profile');
       Db.models.User.findOrCreate({
         where: { googleId: profile.id },
       }).then((user) => done(null, user[0]));

@@ -18,17 +18,18 @@ export const bookingMutations = {
         type: GraphQLDateTime,
       },
     },
-    resolve(root, args, request) {
-      return Db.models.Car.findByPk(args.CarId).then((car) =>
-        car
-          .createBooking({
-            startDateTime: args.startDateTime,
-            endDateTime: args.endDateTime,
-          })
-          .then((booking) => {
-            booking.setUser(request.user);
-          })
-      );
+    async resolve(root, args, request) {
+      try {
+        const car = await Db.models.Car.findByPk(args.CarId);
+        const booking = await car.createBooking({
+          startDateTime: args.startDateTime,
+          endDateTime: args.endDateTime,
+        });
+        await booking.setUser(request.user);
+        return booking;
+      } catch (err) {
+        throw new Error(err);
+      }
     },
   },
   editBooking: {
@@ -49,6 +50,7 @@ export const bookingMutations = {
     },
     async resolve(source, args) {
       const booking = await Db.models.Booking.findByPk(args.uuid);
+
       booking.CarId = args.CarId || booking.CarId;
       booking.startDateTime = args.startDateTime || booking.startDateTime;
       booking.endDateTime = args.endDateTime || booking.endDateTime;

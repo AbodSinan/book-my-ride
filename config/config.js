@@ -12,11 +12,9 @@ module.exports = {
     },
   },
   test: {
-    username: 'postgres',
-    password: 'Pololocoxxx1',
     database: 'database_test',
+    url: 'postgres://postgres:Pololocoxxx1@localhost:5432/database_test',
     host: '127.0.0.1',
-    dialect: 'postgres',
   },
   production: {
     username: 'root',

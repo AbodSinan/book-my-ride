@@ -13,7 +13,7 @@ export const Car = Db.define('Car', {
     allowNull: false,
   },
   hourlyPrice: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.DECIMAL(10, 2),
     allowNull: false,
     defaultValue: '0.00',
   },

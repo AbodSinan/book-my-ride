@@ -8,7 +8,7 @@ import { UserSchema } from './userSchema';
 
 // A schema for bookings, to view related info
 export const BookingSchema = new GraphQLObjectType({
-  name: 'booking',
+  name: 'Booking',
   description: 'A booking instance for a car by a user',
   fields() {
     return {
