@@ -53,6 +53,7 @@ export const carQueries = {
             '$Bookings.startDateTime$': { [Op.gt]: args.endDateTime },
             '$Bookings.endDateTime$': { [Op.lt]: args.startDateTime },
           },
+          CarModelId: args.carModelId,
         },
         include: {
           model: Booking,
