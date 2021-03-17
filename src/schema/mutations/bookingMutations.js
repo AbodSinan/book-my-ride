@@ -67,7 +67,7 @@ export const bookingMutations = {
       },
     },
     resolve(source, args) {
-      return Db.models.Booking.findByPk(uuid).then((booking) =>
+      return Db.models.Booking.findByPk(args.uuid).then((booking) =>
         booking.destroy()
       );
     },
