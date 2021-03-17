@@ -50,13 +50,13 @@ export const carQueries = {
       const cars = await Car.findAll({
         where: {
           [Op.or]: {
-            '$bookings.startDateTime$': { [Op.gt]: args.endDateTime },
-            '$bookings.endDateTime$': { [Op.lt]: args.startDateTime },
+            '$Bookings.startDateTime$': { [Op.gt]: args.endDateTime },
+            '$Bookings.endDateTime$': { [Op.lt]: args.startDateTime },
           },
         },
         include: {
           model: Booking,
-          as: 'bookings',
+          as: 'Bookings',
         },
       });
       return cars;
