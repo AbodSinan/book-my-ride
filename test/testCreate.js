@@ -33,7 +33,7 @@ describe('User query test', () => {
   });
 });
 
-describe('Car query test', () => {
+describe('Car tests', () => {
   it('gets cars', async () => {
     const data = '{ cars{ name description } }';
     const res = await server.post('/graphql').send({
@@ -54,9 +54,82 @@ describe('Car query test', () => {
       query: data,
     });
     expect(res.status).to.equal(200);
+    expect(res.body.data).to.have.property('addCar');
+    expect(res.body.data.addCar.name).to.equal('some car name');
+    expect(res.body.data.addCar.description).to.equal('good car');
+    expect(res.body.data.addCar.hourlyPrice).to.equal(5);
+  });
+
+  it('Edits car', async () => {
+    const data = `mutation { editCar(
+      id: 1
+      name: "another car name"
+      hourlyPrice: 7.00
+      description: "some other sentence"
+    ){ name description hourlyPrice } }`;
+    const res = await server.post('/graphql').send({
+      query: data,
+    });
+    expect(res.status).to.equal(200);
+    expect(res.body.data).to.have.property('editCar');
+    expect(res.body.data.editCar.name).to.equal('another car name');
+    expect(res.body.data.editCar.description).to.equal('some other sentence');
+    expect(res.body.data.editCar.hourlyPrice).to.equal(7);
+  });
+
+  it('Gets no available cars when not available', async () => {
+    const data = `{
+      availableCars(
+        carModelId: 1
+        startDateTime: "2021-01-02T11:31:00.000Z",
+        endDateTime: "2021-01-03T11:31:00.000Z",
+      ){
+        id
+      }
+    }`;
+    const res = await server.post('/graphql').send({
+      query: data,
+    });
+    expect(res.status).to.be.equal(200);
+    expect(res.body.data).to.have.property('availableCars');
+    expect(res.body.data.availableCars).to.be.equal(null);
+  });
+
+  it('Gets available cars outside their ranges', async () => {
+    const data = `{
+      availableCars(
+        startDateTime: "2021-03-01T11:31:00.000Z"
+        endDateTime: "2021-03-03T12:31:00.000Z"
+      ){
+        id
+      }
+    }`;
+    const res = await server.post('/graphql').send({
+      query: data,
+    });
+    console.log(res);
+    expect(res.status).to.be.equal(200);
+    expect(res.body.data).to.have.property('availableCars');
+    expect(res.body.data.availableCars.length).to.be.equal(2);
+  });
+
+  it('deletes cars', async () => {
+    const data = `mutation{
+      deleteCar(id: 1){
+        id
+        hourlyPrice
+        name
+      }
+    }`;
+    const res = await server.post('/graphql').send({
+      query: data,
+    });
+    expect(res.status).to.equal(200);
+    expect(res.body.data).to.have.property('deleteCar');
   });
 });
 
+/*
 describe('Booking query test', () => {
   it('Gets bookings', async () => {
     const data = `{
@@ -170,3 +243,4 @@ describe('Booking query test', () => {
     });
   });
 });
+*/

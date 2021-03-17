@@ -15,7 +15,7 @@ module.exports = {
         {
           uuid: 'e682de12-dccf-4aa5-945b-2dbe452a2131',
           CarId: 2,
-          startDateTime: '2021-01-021T11:31:00.000Z',
+          startDateTime: '2021-01-02T11:31:00.000Z',
           endDateTime: '2021-01-02T12:31:00.000Z',
           createdAt: new Date(),
           updatedAt: new Date(),

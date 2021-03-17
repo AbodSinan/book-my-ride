@@ -23,7 +23,6 @@ module.exports = {
     try {
       await queryInterface.bulkInsert('Cars', [
         {
-          id: 1,
           name: "mike's vently",
           description: '5.2L SUV',
           hourlyPrice: '5.50',
@@ -32,7 +31,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 2,
           name: 'our favorite',
           description: '5.2L SUV',
           hourlyPrice: '7.00',
@@ -41,7 +39,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 3,
           name: 'not this',
           description: '1.3L poop',
           hourlyPrice: '2.40',
@@ -50,7 +47,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 4,
           name: 'lel',
           description: '1.3L poop',
           hourlyPrice: '1.70',

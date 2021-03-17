@@ -47,20 +47,28 @@ export const carQueries = {
       },
     },
     async resolve(root, args) {
-      const cars = await Car.findAll({
-        where: {
-          [Op.or]: {
-            '$Bookings.startDateTime$': { [Op.gt]: args.endDateTime },
-            '$Bookings.endDateTime$': { [Op.lt]: args.startDateTime },
+      try {
+        var whereArgs = {};
+        if (args.carModelId) {
+          whereArgs.carModelId = args.carModelId;
+        }
+        const cars = await Car.findAll({
+          where: {
+            [Op.or]: {
+              '$Bookings.startDateTime$': { [Op.gt]: args.endDateTime },
+              '$Bookings.endDateTime$': { [Op.lt]: args.startDateTime },
+            },
+            ...whereArgs,
           },
-          CarModelId: args.carModelId,
-        },
-        include: {
-          model: Booking,
-          as: 'Bookings',
-        },
-      });
-      return cars;
+          include: {
+            model: Booking,
+            as: 'Bookings',
+          },
+        });
+        return cars;
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
   carModels: {

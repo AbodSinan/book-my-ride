@@ -25,14 +25,17 @@ export const carMutations = {
         type: new GraphQLNonNull(GraphQLInt),
       },
     },
-    resolve(source, args) {
-      return Db.models.CarModel.findByPk(args.carModelId).then((carModel) =>
-        carModel.createCar({
+    async resolve(source, args) {
+      try {
+        const carModel = await Db.models.CarModel.findByPk(args.carModelId);
+        return carModel.createCar({
           name: args.name,
           description: args.description,
           hourlyPrice: args.hourlyPrice,
-        })
-      );
+        });
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
   editCar: {
